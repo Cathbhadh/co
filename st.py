@@ -69,13 +69,13 @@ elif selected_page == "Posts by Day":
      # Create a Streamlit app
     st.title(' Total Posts by Day of Week')
     
-    chart = alt.Chart(df).mark_bar().encode(
-       x='Day of Week',
-       y='Total Posts'
-   	)
+	chart = alt.Chart(df).mark_bar().encode(
+		x='Day of Week',
+		y='Total Posts'
+	)
    
    # Display the chart using Streamlit
-   	st.altair_chart(chart, use_container_width=True)
+	st.altair_chart(chart, use_container_width=True)
 
 
 elif selected_page == "Posts by Hour":
