@@ -36,6 +36,7 @@ posts_by_hour_df = pd.DataFrame(posts_by_hour_data)
 dow = {'Day of Week': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
         'Total Posts': [367645, 371531, 362255, 355968, 358267, 359625, 364916]}
 df = pd.DataFrame(dow)
+df = df.set_index('Day of Week')
 
 
 # Sidebar
