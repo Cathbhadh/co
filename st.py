@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import alt
+import altair as alt
 import matplotlib.pyplot as plt
 
 # Data
