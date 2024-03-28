@@ -3,6 +3,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
+def clean_string(s):
+    # Remove leading/trailing whitespace
+    s = s.strip()
+    # Extract only numeric characters
+    numeric_part = ''.join(filter(str.isdigit, s))
+    return numeric_part
+
 # Data preprocessing
 data = """Unique users: 44916
 Total posts: 1838500
