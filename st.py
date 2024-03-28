@@ -1,374 +1,69 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
+# Data
+unique_users = 44916
+total_posts = 1838500
+total_likes = 27603984
+nsfw_posts = 1115367
+nsfw_likes = 10943083
+avg_likes_per_post = 15.01
+date_most_posts = "2024-01-14"
+avg_posts_per_day = 7924.57
+likes_percentile = [3, 10, 58]
 
-def clean_string(s):
-    # Remove leading/trailing whitespace
-    s = s.strip()
-    # Extract only numeric characters
-    numeric_part = ''.join(filter(str.isdigit, s))
-    return numeric_part
+# Top 10 users data
+top_users_data = {
+    "profile_name": ["Yevhen S.", "Rukia Best Girl", "Zero zero", "Dario", "Catspaws", "AManApart", "Alan Smithee", "Teemuu", "AI MVP", "b4ai"],
+    "user_uuid": ["8a33a752-0d4d-4304-9baa-e954db49a159", "5e32cee2-9697-4af7-9fc6-8d7221ba37b9", "1fadcdf9-b0b5-4c53-b272-adc5ad50a61d", "13f28181-c510-4b59-8252-250447cdba81", "737af57f-a026-4725-a1f3-fd9577491f8a", "473fa9e5-35ac-4112-9156-b49ee8224276", "d4be5799-1c43-4420-a3b2-2697eb99429f", "b9aae266-d509-42e5-be2b-d09195a35756", "07168cd3-f5ae-4b81-8171-dbb411b715e0", "492c6710-84f8-4d25-8173-4637745bbb40"],
+    "post_count": [30084, 16041, 13490, 9132, 8407, 7227, 6638, 6197, 6037, 5548]
+}
+top_users_df = pd.DataFrame(top_users_data)
 
-# Data preprocessing
-data = """Unique users: 44916
-Total posts: 1838500
-Total likes: 27603984
-NSFW posts: 1115367 (60.67%)
-NSFW likes: 10943083 (39.64%)
-Average likes per post: 15.01
-Date with most posts: 2024-01-14
-Average posts per day: 7924.57
-Likes by percentile: [3, 10, 58]
+# Posts by day data
+posts_by_day_data = {
+    "date": ["2023-08-09", "2023-08-10", "2023-08-11"],  # Add more dates here
+    "total_posts": [3426, 4600, 5349],  # Add more total posts here
+    "nsfw_posts": [1934, 2743, 3199],  # Add more nsfw posts here
+    "nsfw_percentage": [56.450671, 59.630435, 59.805571]  # Add more nsfw percentage here
+}
+posts_by_day_df = pd.DataFrame(posts_by_day_data)
 
-Top 10 users by number of posts:
-profile_name                             user_uuid                                post_count
-Yevhen S.                                8a33a752-0d4d-4304-9baa-e954db49a159          30084
-Rukia Best Girl                          5e32cee2-9697-4af7-9fc6-8d7221ba37b9          16041
-Zero zero                                1fadcdf9-b0b5-4c53-b272-adc5ad50a61d          13490
-Dario                                    13f28181-c510-4b59-8252-250447cdba81           9132
-Catspaws                                 737af57f-a026-4725-a1f3-fd9577491f8a           8407
-AManApart                                473fa9e5-35ac-4112-9156-b49ee8224276           7227
-Alan Smithee                             d4be5799-1c43-4420-a3b2-2697eb99429f           6638
-Teemuu                                   b9aae266-d509-42e5-be2b-d09195a35756           6197
-AI MVP                                   07168cd3-f5ae-4b81-8171-dbb411b715e0           6037
-b4ai                                     492c6710-84f8-4d25-8173-4637745bbb40           5548
+# Posts by hour data
+posts_by_hour_data = {
+    "Hour": list(range(24)),
+    "Post Count": [87555, 90077, 83852, 78812, 77059, 72662, 71416, 67774, 65058, 59996, 63106, 66863, 68479, 73217, 79746, 83824, 85581, 84407, 82931, 83693, 82518, 79105, 76382, 74387]
+}
+posts_by_hour_df = pd.DataFrame(posts_by_hour_data)
 
-Posts by day:
-date         total_posts  nsfw_posts   nsfw_percentage
-2023-08-09   3426         1934         56.450671
-2023-08-10   4600         2743         59.630435
-2023-08-11   5349         3199         59.805571
-2023-08-12   5384         3290         61.106984
-2023-08-13   4690         2748         58.592751
-2023-08-14   6159         3697         60.025978
-2023-08-15   5187         3249         62.637363
-2023-08-16   6221         3579         57.530944
-2023-08-17   5429         3009         55.424572
-2023-08-18   5652         3376         59.731069
-2023-08-19   5572         3331         59.781048
-2023-08-20   5722         3334         58.266340
-2023-08-21   5464         3441         62.975842
-2023-08-22   5716         3410         59.657103
-2023-08-23   5506         3103         56.356702
-2023-08-24   5502         3140         57.070156
-2023-08-25   5506         3375         61.296767
-2023-08-26   5607         3394         60.531479
-2023-08-27   6496         4004         61.637931
-2023-08-28   5421         3249         59.933592
-2023-08-29   6265         4138         66.049481
-2023-08-30   5862         3361         57.335380
-2023-08-31   5267         3196         60.679704
-2023-09-01   5222         3334         63.845270
-2023-09-02   5438         3328         61.198970
-2023-09-03   5992         3486         58.177570
-2023-09-04   6562         3803         57.954892
-2023-09-05   6406         4226         65.969404
-2023-09-06   6298         4004         63.575738
-2023-09-07   6138         3688         60.084718
-2023-09-08   6513         4027         61.830186
-2023-09-09   5893         3529         59.884609
-2023-09-10   6069         3825         63.025210
-2023-09-11   5868         3677         62.661895
-2023-09-12   6330         4063         64.186414
-2023-09-13   5848         3870         66.176471
-2023-09-14   5531         3621         65.467366
-2023-09-15   5903         3694         62.578350
-2023-09-16   5248         3366         64.138720
-2023-09-17   5956         3490         58.596373
-2023-09-18   5780         3581         61.955017
-2023-09-19   5726         3774         65.909885
-2023-09-20   4680         2676         57.179487
-2023-09-21   5319         3151         59.240459
-2023-09-22   5823         3606         61.926842
-2023-09-23   5573         3132         56.199533
-2023-09-24   5444         3080         56.576047
-2023-09-25   5618         3159         56.229975
-2023-09-26   5785         3481         60.172861
-2023-09-27   5202         3120         59.976932
-2023-09-28   4641         2848         61.366085
-2023-09-29   5517         3397         61.573319
-2023-09-30   5303         3135         59.117481
-2023-10-01   5630         3131         55.612789
-2023-10-02   5408         3345         61.852811
-2023-10-03   6024         3622         60.126162
-2023-10-04   6074         3936         64.800790
-2023-10-05   6293         3759         59.733037
-2023-10-06   6330         3926         62.022117
-2023-10-07   6297         3976         63.141178
-2023-10-08   6336         3639         57.433712
-2023-10-09   6056         3574         59.015852
-2023-10-10   6096         3602         59.087927
-2023-10-11   6156         3486         56.627680
-2023-10-12   6084         3444         56.607495
-2023-10-13   6174         3499         56.673145
-2023-10-14   6216         3546         57.046332
-2023-10-15   6527         3973         60.870231
-2023-10-16   6866         3769         54.893679
-2023-10-17   6428         3393         52.784692
-2023-10-18   6747         3903         57.847932
-2023-10-19   6616         3547         53.612455
-2023-10-20   6501         3486         53.622520
-2023-10-21   6859         3877         56.524275
-2023-10-22   6659         3787         56.870401
-2023-10-23   6529         3849         58.952366
-2023-10-24   6940         4195         60.446686
-2023-10-25   6800         4162         61.205882
-2023-10-26   6888         4137         60.060976
-2023-10-27   7380         4639         62.859079
-2023-10-28   7470         4817         64.484605
-2023-10-29   6904         4232         61.297798
-2023-10-30   7607         4554         59.865913
-2023-10-31   7278         4296         59.027205
-2023-11-01   6957         4331         62.253845
-2023-11-02   7281         4487         61.626150
-2023-11-03   7128         4560         63.973064
-2023-11-04   7293         4638         63.595228
-2023-11-05   8237         5180         62.886973
-2023-11-06   7471         4685         62.709142
-2023-11-07   7121         4276         60.047746
-2023-11-08   7835         5158         65.832802
-2023-11-09   7400         4648         62.810811
-2023-11-10   7724         4963         64.254272
-2023-11-11   7770         4626         59.536680
-2023-11-12   8224         5121         62.268969
-2023-11-13   8091         4847         59.906068
-2023-11-14   8282         4990         60.251147
-2023-11-15   8067         4976         61.683402
-2023-11-16   7741         4667         60.289368
-2023-11-17   7331         4658         63.538399
-2023-11-18   7685         4745         61.743656
-2023-11-19   8029         5041         62.784905
-2023-11-20   7495         4545         60.640427
-2023-11-21   7442         4576         61.488847
-2023-11-22   7795         4589         58.871071
-2023-11-23   7872         4865         61.801321
-2023-11-24   8146         5083         62.398723
-2023-11-25   8615         5455         63.319791
-2023-11-26   8185         4904         59.914478
-2023-11-27   8710         5048         57.956372
-2023-11-28   8789         5026         57.185118
-2023-11-29   8079         4720         58.423072
-2023-11-30   7952         4639         58.337525
-2023-12-01   7410         4316         58.245614
-2023-12-02   7334         4361         59.462776
-2023-12-03   7862         4763         60.582549
-2023-12-04   8138         4959         60.936348
-2023-12-05   8395         5051         60.166766
-2023-12-06   8270         5203         62.914148
-2023-12-07   8523         5049         59.239704
-2023-12-08   8693         5265         60.565973
-2023-12-09   8303         5048         60.797302
-2023-12-10   9443         5409         57.280525
-2023-12-11   7793         4640         59.540613
-2023-12-12   8041         4685         58.263898
-2023-12-13   8455         5282         62.471910
-2023-12-14   7921         4713         59.500063
-2023-12-15   8559         5095         59.527982
-2023-12-16   8208         4784         58.284600
-2023-12-17   8427         5062         60.068826
-2023-12-18   9264         5792         62.521589
-2023-12-19   8839         5317         60.153864
-2023-12-20   8914         5566         62.441104
-2023-12-21   8746         5323         60.862108
-2023-12-22   7846         4727         60.247260
-2023-12-23   8908         5429         60.945218
-2023-12-24   8614         5211         60.494544
-2023-12-25   8740         5649         64.633867
-2023-12-26   9376         6218         66.318259
-2023-12-27   9279         6173         66.526565
-2023-12-28   8967         5753         64.157466
-2023-12-29   9071         5942         65.505457
-2023-12-30   9628         5858         60.843373
-2023-12-31   9596         5943         61.932055
-2024-01-01   8932         5415         60.624720
-2024-01-02   9426         5920         62.805007
-2024-01-03   10260        6513         63.479532
-2024-01-04   9905         6208         62.675416
-2024-01-05   10280        6662         64.805447
-2024-01-06   10313        6142         59.555900
-2024-01-07   10226        6094         59.593194
-2024-01-08   10472        6122         58.460657
-2024-01-09   10825        6752         62.374134
-2024-01-10   9874         5922         59.975694
-2024-01-11   9215         5202         56.451438
-2024-01-12   9794         5979         61.047580
-2024-01-13   10245        6488         63.328453
-2024-01-14   11111        6961         62.649626
-2024-01-15   10245        6162         60.146413
-2024-01-16   10145        6315         62.247413
-2024-01-17   9706         6230         64.187101
-2024-01-18   9707         5911         60.894200
-2024-01-19   10149        6049         59.601931
-2024-01-20   9983         6017         60.272463
-2024-01-21   9869         6018         60.978823
-2024-01-22   9689         5414         55.877800
-2024-01-23   9346         5053         54.065911
-2024-01-24   8622         4855         56.309441
-2024-01-25   9597         5687         59.258101
-2024-01-26   9017         5243         58.145725
-2024-01-27   9997         6046         60.478143
-2024-01-28   9638         5820         60.385972
-2024-01-29   9651         5690         58.957621
-2024-01-30   9623         5860         60.895771
-2024-01-31   9051         5595         61.816374
-2024-02-01   8992         5345         59.441726
-2024-02-02   9118         5380         59.004168
-2024-02-03   8984         5657         62.967498
-2024-02-04   9199         5535         60.169584
-2024-02-05   8441         5191         61.497453
-2024-02-06   9015         5501         61.020521
-2024-02-07   8851         5223         59.010281
-2024-02-08   8715         5272         60.493402
-2024-02-09   8872         5637         63.536970
-2024-02-10   8952         5590         62.444147
-2024-02-11   9482         6136         64.712086
-2024-02-12   9131         5903         64.647903
-2024-02-13   9122         5669         62.146459
-2024-02-14   9807         6049         61.680432
-2024-02-15   10225        6467         63.246944
-2024-02-16   9957         6166         61.926283
-2024-02-17   10219        6111         59.800372
-2024-02-18   9802         6059         61.813916
-2024-02-19   10145        6432         63.400690
-2024-02-20   10266        6295         61.318917
-2024-02-21   10221        6579         64.367479
-2024-02-22   10772        6713         62.318975
-2024-02-23   10396        6441         61.956522
-2024-02-24   10708        6616         61.785581
-2024-02-25   10916        6655         60.965555
-2024-02-26   9982         5996         60.068123
-2024-02-27   9587         5477         57.129446
-2024-02-28   9543         5601         58.692235
-2024-02-29   8632         4841         56.082020
-2024-03-01   9492         5549         58.459756
-2024-03-02   9323         5644         60.538453
-2024-03-03   9816         5923         60.340261
-2024-03-04   9661         5698         58.979402
-2024-03-05   9372         5588         59.624413
-2024-03-06   9591         5492         57.262016
-2024-03-07   9603         5570         58.002707
-2024-03-08   9612         5602         58.281315
-2024-03-09   9741         6159         63.227595
-2024-03-10   9774         6019         61.581747
-2024-03-11   9061         5470         60.368613
-2024-03-12   10072        6329         62.837569
-2024-03-13   9985         6080         60.891337
-2024-03-14   10090        6389         63.320119
-2024-03-15   9363         5661         60.461391
-2024-03-16   9356         5745         61.404446
-2024-03-17   9571         6067         63.389405
-2024-03-18   9615         5996         62.360894
-2024-03-19   9388         5858         62.398807
-2024-03-20   9208         5250         57.015639
-2024-03-21   9115         5231         57.388919
-2024-03-22   9446         5763         61.009951
-2024-03-23   9872         5925         60.018233
-2024-03-24   10187        6129         60.164916
-2024-03-25   9585         5654         58.988002
-2024-03-26   9891         6243         63.117986
-2024-03-27   5633         3246         57.624712
+# Sidebar
+st.sidebar.title("Navigation")
+selected_page = st.sidebar.radio("", ["Overview", "Top Users", "Posts by Day", "Posts by Hour"])
 
-Posts by hour:
-Hour  Post Count
-0     87555
-1     90077
-2     83852
-3     78812
-4     77059
-5     72662
-6     71416
-7     67774
-8     65058
-9     59996
-10    63106
-11    66863
-12    68479
-13    73217
-14    79746
-15    83824
-16    85581
-17    84407
-18    82931
-19    83693
-20    82518
-21    79105
-22    76382
-23    74387"""
+# Page content
+st.title("Forum Analytics Dashboard")
 
-# Split the data into sections
-sections = data.split('\n\n')
+if selected_page == "Overview":
+    st.write(f"Unique Users: {unique_users}")
+    st.write(f"Total Posts: {total_posts}")
+    st.write(f"Total Likes: {total_likes}")
+    st.write(f"NSFW Posts: {nsfw_posts} ({(nsfw_posts / total_posts) * 100:.2f}%)")
+    st.write(f"NSFW Likes: {nsfw_likes} ({(nsfw_likes / total_likes) * 100:.2f}%)")
+    st.write(f"Average Likes per Post: {avg_likes_per_post}")
+    st.write(f"Date with Most Posts: {date_most_posts}")
+    st.write(f"Average Posts per Day: {avg_posts_per_day}")
+    st.write(f"Likes by Percentile: {likes_percentile}")
 
-# Parse the summary statistics
-summary_stats = sections[0].split('\n')
-unique_users = int(summary_stats[0].split(': ')[1])
-total_posts = int(summary_stats[1].split(': ')[1])
-total_likes = int(summary_stats[2].split(': ')[1])
-nsfw_posts_str = summary_stats[3].split(': ')[1]
-nsfw_posts = int(nsfw_posts_str.split(' ')[0])
-nsfw_likes_str = summary_stats[4].split(': ')[1]
-nsfw_likes = int(nsfw_likes_str.split(' ')[0])
-avg_likes_per_post = float(summary_stats[5].split(': ')[1])
-date_most_posts = summary_stats[6].split(': ')[1]
-avg_posts_per_day = float(summary_stats[7].split(': ')[1])
-likes_percentiles = eval(summary_stats[8].split(': ')[1])
+elif selected_page == "Top Users":
+    st.subheader("Top 10 Users by Number of Posts")
+    st.dataframe(top_users_df)
 
-# Parse the top users data
-# Parse the top users data
-top_users_data = sections[1].split('\n')[2:]
-# Split each row by the first two spaces only
-top_users_data = [row.split(' ', 2) for row in top_users_data]
-top_users = pd.DataFrame(top_users_data, columns=['profile_name', 'user_uuid', 'post_count'])
-top_users['post_count'] = top_users['post_count'].astype(int)
+elif selected_page == "Posts by Day":
+    st.subheader("Posts by Day")
+    st.line_chart(posts_by_day_df.set_index("date")[["total_posts", "nsfw_posts"]])
 
+elif selected_page == "Posts by Hour":
+    st.subheader("Posts by Hour")
+    st.bar_chart(posts_by_hour_df.set_index("Hour"))
 
-# Parse the posts by day data
-posts_by_day_data = sections[2].split('\n')[1:]
-posts_by_day = pd.DataFrame([row.split() for row in posts_by_day_data], columns=['date', 'total_posts', 'nsfw_posts', 'nsfw_percentage'])
-posts_by_day['total_posts'] = posts_by_day['total_posts'].astype(int)
-posts_by_day['nsfw_posts'] = posts_by_day['nsfw_posts'].astype(int)
-posts_by_day['nsfw_percentage'] = posts_by_day['nsfw_percentage'].astype(float)
-
-# Parse the posts by hour data
-posts_by_hour_data = sections[3].split('\n')[1:]
-posts_by_hour = pd.DataFrame([row.split() for row in posts_by_hour_data], columns=['Hour', 'Post Count'])
-posts_by_hour['Post Count'] = posts_by_hour['Post Count'].astype(int)
-
-# Streamlit app
-st.title('Data Visualization')
-
-# Summary statistics
-st.header('Summary Statistics')
-st.write(f'Unique users: {unique_users}')
-st.write(f'Total posts: {total_posts}')
-st.write(f'Total likes: {total_likes}')
-st.write(f'NSFW posts: {nsfw_posts} ({(nsfw_posts / total_posts) * 100:.2f}%)')
-st.write(f'NSFW likes: {nsfw_likes} ({(nsfw_likes / total_likes) * 100:.2f}%)')
-st.write(f'Average likes per post: {avg_likes_per_post}')
-st.write(f'Date with most posts: {date_most_posts}')
-st.write(f'Average posts per day: {avg_posts_per_day}')
-st.write(f'Likes by percentile: {likes_percentiles}')
-
-# Top users
-st.header('Top Users by Number of Posts')
-st.write(top_users)
-
-# Posts by day
-st.header('Posts by Day')
-fig, ax = plt.subplots(figsize=(12, 6))
-sns.lineplot(x='date', y='total_posts', data=posts_by_day, ax=ax, label='Total Posts')
-sns.lineplot(x='date', y='nsfw_posts', data=posts_by_day, ax=ax, label='NSFW Posts')
-ax.set_xlabel('Date')
-ax.set_ylabel('Number of Posts')
-ax.set_title('Posts by Day')
-st.pyplot(fig)
-
-# Posts by hour
-st.header('Posts by Hour')
-fig, ax = plt.subplots(figsize=(12, 6))
-sns.barplot(x='Hour', y='Post Count', data=posts_by_hour, ax=ax)
-ax.set_xlabel('Hour')
-ax.set_ylabel('Number of Posts')
-ax.set_title('Posts by Hour')
-st.pyplot(fig)
