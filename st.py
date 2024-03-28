@@ -307,9 +307,13 @@ avg_posts_per_day = float(summary_stats[7].split(': ')[1])
 likes_percentiles = eval(summary_stats[8].split(': ')[1])
 
 # Parse the top users data
+# Parse the top users data
 top_users_data = sections[1].split('\n')[2:]
-top_users = pd.DataFrame([row.split() for row in top_users_data], columns=['profile_name', 'user_uuid', 'post_count'])
+# Split each row by the first two spaces only
+top_users_data = [row.split(' ', 2) for row in top_users_data]
+top_users = pd.DataFrame(top_users_data, columns=['profile_name', 'user_uuid', 'post_count'])
 top_users['post_count'] = top_users['post_count'].astype(int)
+
 
 # Parse the posts by day data
 posts_by_day_data = sections[2].split('\n')[1:]
