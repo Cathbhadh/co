@@ -84,5 +84,5 @@ elif selected_page == "Posts by Day":
     st.line_chart(posts_by_day_df.set_index("date")[["total_posts", "nsfw_posts"]])
 
 elif selected_page == "Posts by Hour":
-    st.subheader("Posts by Hour")
+    st.subheader("Posts by Hour (UTC)")
     st.bar_chart(posts_by_hour_df.set_index("Hour"))
