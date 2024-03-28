@@ -33,6 +33,13 @@ posts_by_hour_data = {
 }
 posts_by_hour_df = pd.DataFrame(posts_by_hour_data)
 
+dow = {'Day of Week': ['Friday', 'Monday', 'Saturday', 'Sunday', 'Thursday', 'Tuesday', 'Wednesday'],
+        'Total Posts': [358267, 367645, 359625, 364916, 355968, 371531, 362255]}
+df = pd.DataFrame(dow)
+
+# Set the index to 'Day of Week'
+dow = df.set_index('Day of Week')
+
 # Sidebar
 st.sidebar.title("Navigation")
 selected_page = st.sidebar.radio("", ["Overview", "Top Users", "Posts by Day", "Posts by Hour"])
@@ -60,6 +67,11 @@ elif selected_page == "Top Users":
 elif selected_page == "Posts by Day":
     st.subheader("Posts by Day")
     st.line_chart(posts_by_day_df.set_index("date")[["total_posts", "nsfw_posts"]])
+     # Create a Streamlit app
+    st.title(' Total Posts by Day of Week')
+    
+    # Plot the bar chart
+    st.bar_chart(dow)
 
 elif selected_page == "Posts by Hour":
     st.subheader("Posts by Hour")
