@@ -50,7 +50,7 @@ if selected_page == "Overview":
     st.write(f"Average Likes per NSFW Post: {avg_nsfw_likes_per_post}")
     st.write(f"Date with Most Posts: {date_most_posts}")
     st.write(f"Average Posts per Day: {avg_posts_per_day}")
-    st.write(f"Likes by Percentile: {likes_percentile}")
+    st.write(f"Bottom 25%/Median/Top-25% likes/post: {likes_percentile}")
 
 elif selected_page == "Top Users":
     st.subheader("Top 100 Users by Number of Posts")
