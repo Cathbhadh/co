@@ -33,14 +33,13 @@ posts_by_hour_data = {
 }
 posts_by_hour_df = pd.DataFrame(posts_by_hour_data)
 
-dow = {'Day of Week': ['Friday', 'Monday', 'Saturday', 'Sunday', 'Thursday', 'Tuesday', 'Wednesday'],
-        'Total Posts': [358267, 367645, 359625, 364916, 355968, 371531, 362255]}
+dow = {'Day of Week': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        'Total Posts': [367645, 371531, 362255, 355968, 358267, 359625, 364916]}
 df = pd.DataFrame(dow)
 
 # Set the index to 'Day of Week'
 dow = df.set_index('Day of Week')
-day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-dow = df.reindex(day_order)
+
 
 
 
