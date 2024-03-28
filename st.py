@@ -42,7 +42,7 @@ selected_page = st.sidebar.radio("", ["Overview", "Top Users", "Posts by Day", "
 # Page content
 st.title("YDStat")
 if selected_page == "Overview":
-    st.subheader(From 03.10.2022 to 27.03.2024)
+    st.subheader("From 03.10.2022 to 27.03.2024")
     st.write(f"Unique Users: {unique_users}")
     st.write(f"Total Posts: {total_posts}")
     st.write(f"Total Likes: {total_likes}")
