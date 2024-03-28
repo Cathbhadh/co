@@ -68,10 +68,10 @@ elif selected_page == "Posts by Day":
     st.line_chart(posts_by_day_df.set_index("date")[["total_posts", "nsfw_posts"]])
     st.title(' Total Posts by Day of Week')
     chart = alt.Chart(df).mark_bar().encode(
-		x='Day of Week',
-		y='Total Posts'
-	)
-	st.altair_chart(chart, use_container_width=True)
+        x='Day of Week',
+        y='Total Posts'
+    )
+    st.altair_chart(chart, use_container_width=True)
 
 elif selected_page == "Posts by Hour":
     st.subheader("Posts by Hour")
