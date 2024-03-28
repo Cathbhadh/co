@@ -62,9 +62,9 @@ elif selected_page == "Top Users":
     st.write("Top 750 users contributed 1234726 posts (48.61%) and have 21377717 of all likes (69.87%)")
     st.write("Top 1000 users contributed 1375975 posts (54.17%) and have 22859875 of all likes (74.71%)") 
     st.subheader("Top 100 Users by Number of Posts")
-    st.dataframe(top_users_df, hide_index = True)
+    st.dataframe(top_users_df)
     st.subheader("Top 100 Users by Number of Likes")
-    st.dataframe(top_users_likes_df, hide_index = True)
+    st.dataframe(top_users_likes_df)
 
 elif selected_page == "Posts by Day":
     st.subheader("Posts by Day")
