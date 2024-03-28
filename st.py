@@ -66,10 +66,8 @@ elif selected_page == "Top Users":
 elif selected_page == "Posts by Day":
     st.subheader("Posts by Day")
     st.line_chart(posts_by_day_df.set_index("date")[["total_posts", "nsfw_posts"]])
-     # Create a Streamlit app
     st.title(' Total Posts by Day of Week')
-    
-	chart = alt.Chart(df).mark_bar().encode(
+    chart = alt.Chart(df).mark_bar().encode(
 		x='Day of Week',
 		y='Total Posts'
 	)
