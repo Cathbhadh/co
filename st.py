@@ -35,9 +35,16 @@ posts_by_hour_data = {
 posts_by_hour_df = pd.DataFrame(posts_by_hour_data)
 
 dow = {'Day of Week': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-        'Total Posts': [367645, 371531, 362255, 355968, 358267, 359625, 364916]}
+       'Total Posts': [367645, 371531, 362255, 355968, 358267, 359625, 364916]}
+
 df = pd.DataFrame(dow)
-dow = df.set_index('Day of Week')
+
+# Define the order of days
+day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+# Group the data by day of week and sum the total posts
+daily_posts = df.groupby('Day of Week')['Total Posts'].sum().reindex(day_order)
+
 
 
 # Sidebar
@@ -68,11 +75,30 @@ elif selected_page == "Posts by Day":
     st.subheader("Posts by Day")
     st.line_chart(posts_by_day_df.set_index("date")[["total_posts", "nsfw_posts"]])
     st.title(' Total Posts by Day of Week')
-    chart = alt.Chart(df).mark_bar().encode(
-        x='Day of Week',
-        y='Total Posts'
-    )
-    st.altair_chart(chart, use_container_width=True)
+	alt.Chart:
+	        day_order = [
+	            "Monday",
+	            "Tuesday",
+	            "Wednesday",
+	            "Thursday",
+	            "Friday",
+	            "Saturday",
+	            "Sunday",
+	        ]
+	        daily_likes = (
+	            df.groupby(df["timestamp"].dt.day_name())["likes"].sum().reindex(day_order)
+	        )
+	        chart = (
+	            alt.Chart(daily_likes.reset_index())
+	            .mark_bar()
+	            .encode(
+	                x=alt.X("timestamp", title="Day of Week", sort=day_order),
+	                y=alt.Y("likes", title="Total Likes"),
+	            )
+	            .properties(title="Likes per Day of Week")
+	        )
+	        return chart
+
 
 elif selected_page == "Posts by Hour":
     st.subheader("Posts by Hour")
