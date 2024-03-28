@@ -61,7 +61,6 @@ elif selected_page == "Top Users":
 elif selected_page == "Posts by Day":
     st.subheader("Posts by Day")
     st.line_chart(posts_by_day_df.set_index("date")[["total_posts", "nsfw_posts"]])
-    st.title(' Total Posts by Day of Week')
 
 elif selected_page == "Posts by Hour":
     st.subheader("Posts by Hour")
