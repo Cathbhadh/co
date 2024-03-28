@@ -53,9 +53,9 @@ if selected_page == "Overview":
 
 elif selected_page == "Top Users":
     st.subheader("Top 100 Users by Number of Posts")
-    st.dataframe(top_users_df)
+    st.dataframe(top_users_df, hide_index = True)
     st.subheader("Top 100 Users by Number of Likes")
-    st.dataframe(top_users_likes_df)
+    st.dataframe(top_users_likes_df, hide_index = True)
 
 elif selected_page == "Posts by Day":
     st.subheader("Posts by Day")
