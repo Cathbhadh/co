@@ -39,6 +39,8 @@ df = pd.DataFrame(dow)
 
 # Set the index to 'Day of Week'
 dow = df.set_index('Day of Week')
+dow = df.sort_index()
+
 
 # Sidebar
 st.sidebar.title("Navigation")
