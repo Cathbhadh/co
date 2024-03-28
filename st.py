@@ -37,11 +37,6 @@ dow = {'Day of Week': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', '
         'Total Posts': [367645, 371531, 362255, 355968, 358267, 359625, 364916]}
 df = pd.DataFrame(dow)
 
-# Set the index to 'Day of Week'
-dow = df.set_index('Day of Week')
-
-
-
 
 # Sidebar
 st.sidebar.title("Navigation")
