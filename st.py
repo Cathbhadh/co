@@ -56,11 +56,11 @@ if selected_page == "Overview":
 
 elif selected_page == "Top Users":
     st.subheader("%", help = "These are two different sets")
-    st.write("Top 100 users contributed 492475 posts (19.39%) and 10513319 likes (34.36%)")
-    st.write("Top 200 users contributed 691986 posts (27.24%) and 14137932 likes (46.21%)")
-    st.write("Top 500 users contributed 1046820 posts (41.21%) and 19175784 likes (62.67%)")
-    st.write("Top 750 users contributed 1234726 posts (48.61%) and 21377717 likes (69.87%)")
-    st.write("Top 1000 users contributed 1375975 posts (54.17%) and 22859875 likes (74.71%)") 
+    st.write("Top 100 users contributed 492475 posts (19.39%) and have 10513319 of all likes (34.36%)")
+    st.write("Top 200 users contributed 691986 posts (27.24%) and have 14137932 of all likes (46.21%)")
+    st.write("Top 500 users contributed 1046820 posts (41.21%) and have 19175784 of all likes (62.67%)")
+    st.write("Top 750 users contributed 1234726 posts (48.61%) and have 21377717 of all likes (69.87%)")
+    st.write("Top 1000 users contributed 1375975 posts (54.17%) and have 22859875 of all likes (74.71%)") 
     st.subheader("Top 100 Users by Number of Posts")
     st.dataframe(top_users_df, hide_index = True)
     st.subheader("Top 100 Users by Number of Likes")
