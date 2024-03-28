@@ -8,7 +8,6 @@ unique_users = 60735
 total_posts = 2540207
 total_likes = 30597519
 nsfw_posts = 1626131
-nsfw_likes = 10943083
 avg_likes_per_post = 12.05
 date_most_posts = "2024-01-14"
 avg_posts_per_day = 4704.09
@@ -46,7 +45,6 @@ if selected_page == "Overview":
     st.write(f"Total Posts: {total_posts}")
     st.write(f"Total Likes: {total_likes}")
     st.write(f"NSFW Posts: {nsfw_posts} ({(nsfw_posts / total_posts) * 100:.2f}%)")
-    st.write(f"NSFW Likes: {nsfw_likes} ({(nsfw_likes / total_likes) * 100:.2f}%)")
     st.write(f"Average Likes per Post: {avg_likes_per_post}")
     st.write(f"Date with Most Posts: {date_most_posts}")
     st.write(f"Average Posts per Day: {avg_posts_per_day}")
