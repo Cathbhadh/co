@@ -55,10 +55,10 @@ if selected_page == "Overview":
     st.write(f"Bottom 25%/Median/Top-25% likes/post: {likes_percentile}")
 
 elif selected_page == "Top Users":
-    st.subheader("%")
+    st.subheader("%", helper = "These are two different sets")
     st.write("Top 100 users contributed 492475 posts (19.39%) and 10513319 likes (34.36%)")
     st.write("Top 200 users contributed 691986 posts (27.24%) and 14137932 likes (46.21%)")
-    st.write("Top 500 users contributed 1046820 posts (41.21%) and 19175784 likes (62.67%")
+    st.write("Top 500 users contributed 1046820 posts (41.21%) and 19175784 likes (62.67%)")
     st.subheader("Top 100 Users by Number of Posts")
     st.dataframe(top_users_df, hide_index = True)
     st.subheader("Top 100 Users by Number of Likes")
