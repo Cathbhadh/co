@@ -40,7 +40,7 @@ st.sidebar.title("Navigation")
 selected_page = st.sidebar.radio("", ["Overview", "Top Users", "Posts by Day", "Posts by Hour"])
 
 # Page content
-st.title("YDStat")
+st.title("YDStat (From 03.10.2022 to 27.03.2024)")
 
 if selected_page == "Overview":
     st.write(f"Unique Users: {unique_users}")
